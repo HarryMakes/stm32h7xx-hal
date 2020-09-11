@@ -1,3 +1,48 @@
+//! *See the examples folder for more usage examples*
+//!
+//! This Hardware Abstraction Layer (HAL) provides the following functionality:
+//!
+//! Setup and Configuration
+//!
+//! * [Power Configuration](crate::pwr)
+//! * [Reset and Clock Control](crate::rcc)
+//!
+//! Digital IO
+//!
+//! * [General Purpose Input / Output](crate::gpio)
+//! * [External interrupt controller](crate::exti)
+//!
+//! Analog IO
+//!
+//! * [Analog to Digital Converter (ADC)](crate::adc)
+//! * [Digital to Analog Converter (DAC)](crate::dac)
+//!
+//! Digital Busses
+//!
+//! * [Inter Integrated Circuit (I2C)](crate::i2c)
+//! * [Serial Peripheral Interface (SPI)](crate::spi)
+//! * [Serial Data (USART/UART)](crate::serial)
+//! * [Serial Audio Interface](crate::sai)
+//! * [Quad SPI](crate::qspi) Feature gate `qspi`
+//! * [Ethernet](crate::ethernet) Feature gate `ethernet`
+//!
+//! External Memory
+//!
+//! * [Flexible Memory Controller (FMC)](crate::fmc) Feature gate `fmc`
+//! * [SD Card (SDMMC)](crate::sdmmc) Feature gate `sdmmc`
+//!
+//! Timing functions
+//!
+//! * [Pulse Width Modulation (PWM)](crate::pwm)
+//! * [Quadrature Encoder Interface](crate::qei)
+//! * [Timers](crate::timer)
+//! * [Delays](crate::delay)
+//!
+//! Others
+//!
+//! * [Random Number Generator](crate::rng)
+//! * [System Window Watchdog](crate::watchdog)
+
 #![cfg_attr(not(test), no_std)]
 #![allow(non_camel_case_types)]
 
@@ -23,6 +68,7 @@ compile_error!(
 );
 
 pub use embedded_hal as hal;
+pub mod traits;
 
 pub use nb;
 pub use nb::block;
@@ -72,13 +118,17 @@ pub use crate::stm32::interrupt;
 #[cfg(feature = "device-selected")]
 pub mod adc;
 #[cfg(feature = "device-selected")]
-pub mod delay;
+pub mod dac;
 #[cfg(feature = "device-selected")]
-pub mod dma;
+pub mod delay;
+#[cfg(all(feature = "device-selected", feature = "ethernet"))]
+pub mod ethernet;
 #[cfg(feature = "device-selected")]
 pub mod exti;
 #[cfg(feature = "device-selected")]
 pub mod flash;
+#[cfg(all(feature = "device-selected", feature = "fmc"))]
+pub mod fmc;
 #[cfg(feature = "device-selected")]
 pub mod gpio;
 #[cfg(feature = "device-selected")]
@@ -91,12 +141,16 @@ pub mod pwm;
 pub mod pwr;
 #[cfg(feature = "device-selected")]
 pub mod qei;
+#[cfg(all(feature = "device-selected", feature = "quadspi"))]
+pub mod qspi;
 #[cfg(feature = "device-selected")]
 pub mod rcc;
 #[cfg(feature = "device-selected")]
 pub mod rng;
 #[cfg(feature = "device-selected")]
 pub mod sai;
+#[cfg(all(feature = "device-selected", feature = "sdmmc"))]
+pub mod sdmmc;
 #[cfg(feature = "device-selected")]
 pub mod serial;
 #[cfg(feature = "device-selected")]
@@ -109,5 +163,3 @@ pub mod time;
 pub mod timer;
 #[cfg(feature = "device-selected")]
 pub mod watchdog;
-#[cfg(feature = "device-selected")]
-pub mod qspi;
